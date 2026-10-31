@@ -1,0 +1,40 @@
+﻿<?xml version="1.0"?>
+
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+
+<configuration>
+    <appSettings>
+      <add key="GrabarOracle" value="SI"/>
+      <add key="CompaniaComprobantes" value="720"/>
+      <add key="CompaniaRetencion" value="720"/>
+      <add key="RutaTemporal" value="D:\AccuratechSoftware\sunatinterface\SunatFiles\"/>
+      <add key="EnviarOSE" value="SI"/>
+      <add key="MontoDetraccion" value="700"/>
+    </appSettings>
+    <connectionStrings>
+        <add name="ConexionOracle" connectionString="Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=172.20.0.66)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=EDP)));User Id=baan;Password=baan;"/>
+    </connectionStrings>  
+    <system.web>
+        <compilation debug="true" targetFramework="4.0" />
+        <sessionState timeout="144000">
+        </sessionState>
+    </system.web>
+    <system.serviceModel>
+    <bindings>
+      <basicHttpBinding>
+        <binding name="BusinessServiceSoap" />
+      </basicHttpBinding>
+    </bindings>
+    <client>
+      <endpoint address="http://localhost:52084/BusinessService.asmx"
+          binding="basicHttpBinding" bindingConfiguration="BusinessServiceSoap"
+          contract="oServicioComprobante.BusinessServiceSoap" name="BusinessServiceSoap" />
+    </client>
+  </system.serviceModel>
+  <system.webServer>
+    <modules runAllManagedModulesForAllRequests="true"/>
+  </system.webServer>
+</configuration>

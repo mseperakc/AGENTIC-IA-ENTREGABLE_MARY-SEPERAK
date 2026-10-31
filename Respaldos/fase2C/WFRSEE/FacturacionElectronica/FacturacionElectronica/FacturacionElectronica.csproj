@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{63C20AC6-1969-473E-B5D1-9071439836EA}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FacturacionElectronica</RootNamespace>
+    <AssemblyName>FacturacionElectronica</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <Use64BitIISExpress>false</Use64BitIISExpress>
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=4.1.50927.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Librerias\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Custom\wucFecha.ascx" />
+    <Content Include="Custom\wucRangoFechas.ascx" />
+    <Content Include="DescargarComprobantes.aspx" />
+    <Content Include="Images\background.png" />
+    <Content Include="Images\ico_noticias.png" />
+    <Content Include="Images\logoaccuratech.png" />
+    <Content Include="Images\logoeditora.jpg" />
+    <Content Include="Login.aspx" />
+    <Content Include="ProcesarComprobantes.aspx" />
+    <Content Include="ProcesarRetenciones.aspx" />
+    <Content Include="Scripts\cultures\kendo.culture.es-PE.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\kendo.calendar.min.js" />
+    <Content Include="Scripts\kendo.web.min.js" />
+    <Content Include="Scripts\see.js" />
+    <Content Include="Site.Master" />
+    <Content Include="Guias.aspx" />
+    <Content Include="Styles\see.css" />
+    <Content Include="Styles\Default\editor.png" />
+    <Content Include="Styles\Default\imagebrowser.png" />
+    <Content Include="Styles\Default\loading-image.gif" />
+    <Content Include="Styles\Default\loading.gif" />
+    <Content Include="Styles\Default\slider-h.gif" />
+    <Content Include="Styles\Default\slider-v.gif" />
+    <Content Include="Styles\Default\sprite.png" />
+    <Content Include="Styles\estilos.css" />
+    <Content Include="Styles\EstiloGrilla.css" />
+    <None Include="Properties\PublishProfiles\Facturacion.pubxml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Images\GridView\captionbckg.gif" />
+    <Content Include="Images\GridView\first.png" />
+    <Content Include="Images\GridView\last.png" />
+    <Content Include="Images\GridView\next.png" />
+    <Content Include="Images\GridView\previous.png" />
+    <Content Include="Images\GridView\thbackground.gif" />
+    <Content Include="Images\GridView\toolbarbck.gif" />
+    <Content Include="Images\ico_calendario.gif" />
+    <Content Include="Styles\estructuras.css" />
+    <Content Include="Styles\fonts.css" />
+    <Content Include="Styles\formatos.css" />
+    <Content Include="Styles\kendo.common.min.css" />
+    <Content Include="Styles\kendo.default.min.css" />
+    <Content Include="Styles\reseteo.css" />
+    <Content Include="ValidarCertificado.aspx" />
+    <Content Include="ValidarTicket.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppStatic.cs" />
+    <Compile Include="Custom\wucFecha.ascx.cs">
+      <DependentUpon>wucFecha.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Custom\wucFecha.ascx.designer.cs">
+      <DependentUpon>wucFecha.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Custom\wucRangoFechas.ascx.cs">
+      <DependentUpon>wucRangoFechas.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Custom\wucRangoFechas.ascx.designer.cs">
+      <DependentUpon>wucRangoFechas.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DescargarComprobantes.aspx.cs">
+      <DependentUpon>DescargarComprobantes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DescargarComprobantes.aspx.designer.cs">
+      <DependentUpon>DescargarComprobantes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProcesarComprobantes.aspx.cs">
+      <DependentUpon>ProcesarComprobantes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProcesarComprobantes.aspx.designer.cs">
+      <DependentUpon>ProcesarComprobantes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProcesarRetenciones.aspx.cs">
+      <DependentUpon>ProcesarRetenciones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProcesarRetenciones.aspx.designer.cs">
+      <DependentUpon>ProcesarRetenciones.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Guias.aspx.cs">
+      <DependentUpon>Guias.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guias.aspx.designer.cs">
+      <DependentUpon>Guias.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Site.Master.cs">
+      <DependentUpon>Site.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Site.Master.designer.cs">
+      <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ValidarCertificado.aspx.cs">
+      <DependentUpon>ValidarCertificado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ValidarCertificado.aspx.designer.cs">
+      <DependentUpon>ValidarCertificado.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ValidarTicket.aspx.cs">
+      <DependentUpon>ValidarTicket.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ValidarTicket.aspx.designer.cs">
+      <DependentUpon>ValidarTicket.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Editora.BusinessEntities\Editora.BusinessEntities.csproj">
+      <Project>{C84305A2-9A63-4AC0-8E21-E38F0436D9FB}</Project>
+      <Name>Editora.BusinessEntities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Editora.BusinessLogic\Editora.BusinessLogic.csproj">
+      <Project>{BFEF6DB6-5BE8-479C-B189-8E6F67A47D03}</Project>
+      <Name>Editora.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Editora.DataAccess\Editora.DataAccess.csproj">
+      <Project>{D705D834-1DAC-438D-AD06-1A0889702594}</Project>
+      <Name>Editora.DataAccess</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56763</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:56763/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

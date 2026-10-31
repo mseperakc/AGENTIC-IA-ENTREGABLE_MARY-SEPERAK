@@ -1,0 +1,18 @@
+﻿
+Caso Comprobante          Resultado                                             
+---- -----------          ---------                                             
+   1 F081-26782           1 Registros Aceptados · 0 Registros Rechazados        
+   2 F079-25805           1 Registros Aceptados · 0 Registros Rechazados        
+   3 F002-301438          1 Registros Aceptados · 0 Registros Rechazados        
+   4 F081-22979           1 Registros Aceptados · 0 Registros Rechazados        
+   5 F005-210574          1 Registros Aceptados · 0 Registros Rechazados        
+   6 B079-5341            1 Registros Aceptados · 0 Registros Rechazados        
+   7 F005-29347           1 Registros Aceptados · 0 Registros Rechazados        
+   8 F005-784             1 Registros Aceptados · 0 Registros Rechazados        
+   9 R001-2004            1 Registros Aceptados · 0 Registros Rechazados        
+  10 Baja 05/10/2026      Se procesaron las comunicaciones baja                 
+  11 Reversión 25/10/2023 Se procesaron 1 reversiones: 1 aceptadas, 0 rechazadas
+  12 F005-203655          1 Registros Aceptados · 0 Registros Rechazados        
+
+
+

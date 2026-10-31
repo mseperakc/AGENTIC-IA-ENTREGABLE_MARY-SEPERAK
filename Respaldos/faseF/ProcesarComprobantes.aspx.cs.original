@@ -1,0 +1,881 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Editora.BusinessLogic;
+using Editora.BusinessEntities;
+using Editora.BusinessLogic.oServicioComprobante;
+using Editora.DataAccess;
+
+namespace FacturacionElectronica
+{
+    public partial class ProcesarComprobantes : System.Web.UI.Page
+    {
+        List<EComprobante> ListaComprobantes;
+        List<EResumenDarioClient> ListaResumenDiario;
+        List<EComunicacionBajaClient> ListaComunicacion;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+                SetControls();
+        }
+
+        /// <summary>
+        /// Valida una fecha escrita como dd/MM/yyyy. Si no es válida devuelve false y el mensaje para el operador.
+        /// </summary>
+        private bool ValidarFecha(string texto, string campo, bool permitirFutura, out DateTime fecha, out string mensaje)
+        {
+            mensaje = String.Empty;
+            if (!DateTime.TryParseExact((texto ?? String.Empty).Trim(), "dd/MM/yyyy", new System.Globalization.CultureInfo("es-PE"),
+                System.Globalization.DateTimeStyles.None, out fecha))
+            {
+                mensaje = campo + ": use el formato dd/mm/aaaa (ej. 05/10/2026)";
+                return false;
+            }
+            if (!permitirFutura && fecha.Date > DateTime.Today)
+            {
+                mensaje = campo + ": no puede ser una fecha futura";
+                return false;
+            }
+            return true;
+        }
+
+        public void SetMesActual()
+        {
+            IFormatProvider cultura = new System.Globalization.CultureInfo("es-PE");
+            string FechaNew = string.Empty; string mes = (DateTime.Now.Month).ToString("0#");
+            DateTime dFecha;
+            if (Convert.ToInt32(mes) < 12)
+            {
+                FechaNew = "01/" + (DateTime.Now.Month + 1).ToString("0#") + "/" + Convert.ToString(DateTime.Now.Year);
+                dFecha = Convert.ToDateTime(FechaNew, cultura);
+            }
+            else
+            {
+                FechaNew = "01/" + "01/" + Convert.ToString(DateTime.Now.Year + 1);
+                dFecha = Convert.ToDateTime(FechaNew, cultura);
+            }
+
+            DateTime dFechaInicio = dFecha.AddMonths(-1);
+            DateTime dFechaFin = dFecha.AddDays(-1);
+
+            txtFechaInicio.Text = dFechaInicio.ToString("dd/MM/yyyy");
+            txtFechaFin.Text = dFechaFin.ToString("dd/MM/yyyy");
+
+            //txtFechaRD.Text = dFechaInicio.ToString("dd/MM/yyyy");
+        }
+
+        private void SetControls()
+        {
+            try
+            {
+                //wucFecha1.SetMesActual();
+                SetMesActual();
+                //
+                string strCompania = AppStatic.CompaniaComprobantes();
+                ddlbCompania.SelectedValue = strCompania;
+
+                string _query = "select t$ptov$c as codigo, t$ptov$c || ' - ' || t$dsca$c as descripcion from ttcmcs903" + strCompania + " where t$esta = '1' order by t$ptov$c";
+                DataTable dtPuntoVenta = FabricaSingleton<DComprobante>.Crear().ObtenerTabla(_query);
+                ddlbPuntoVenta1.DataSource = dtPuntoVenta;
+                ddlbPuntoVenta1.DataValueField = "codigo";
+                ddlbPuntoVenta1.DataTextField = "descripcion";
+                ddlbPuntoVenta1.DataBind();
+
+                ddlbPuntoVenta2.DataSource = dtPuntoVenta;
+                ddlbPuntoVenta2.DataValueField = "codigo";
+                ddlbPuntoVenta2.DataTextField = "descripcion";
+                ddlbPuntoVenta2.DataBind();
+            }
+            catch (Exception ex)
+            {
+                lblCant.Text = ex.Message;
+            }
+            
+        }
+
+        protected void GoPage(object sender, System.EventArgs e)
+        {
+            DropDownList oIraPag = (DropDownList)sender;
+            Int32 iNumPag = 0;
+
+            if (Int32.TryParse(oIraPag.Text.Trim(), out iNumPag) && iNumPag > 0 && iNumPag <= GridViewDatos.PageCount)
+            {
+                if ((Int32.TryParse(oIraPag.Text.Trim(), out iNumPag) && iNumPag > 0) && iNumPag <= GridViewDatos.PageCount)
+                    GridViewDatos.PageIndex = iNumPag - 1;
+                else
+                    GridViewDatos.PageIndex = 0;
+            }
+
+            ListaComprobantes = (List<EComprobante>)ViewState["Lista"];
+
+            CargarData(ListaComprobantes);
+        }
+
+        protected void GridViewDatos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridViewDatos.PageIndex = e.NewPageIndex;
+
+            ListaComprobantes = (List<EComprobante>)ViewState["Lista"];
+            CheckBox chk = (CheckBox)GridViewDatos.HeaderRow.FindControl("chkheader");
+            Boolean val = chk.Checked;
+
+            CargarData(ListaComprobantes);
+
+            if (val)
+            {
+                CheckBox chk1 = (CheckBox)GridViewDatos.HeaderRow.FindControl("chkheader");
+                chk1.Checked = true;
+            }
+        }
+
+        protected void chkboxSelectAll_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox ChkBoxHeader = (CheckBox)GridViewDatos.HeaderRow.FindControl("chkheader");
+            foreach (GridViewRow row in GridViewDatos.Rows)
+            {
+                CheckBox ChkBoxRows = (CheckBox)row.FindControl("chkAccept");
+                if (ChkBoxHeader.Checked == true)
+                {
+                    ChkBoxRows.Checked = true;
+                    SetCheckLists(true);
+                }
+                else
+                {
+                    ChkBoxRows.Checked = false;
+                    SetCheckLists(false);
+                }
+            }
+        }
+
+        private void SetCheckLists(bool check)
+        {
+            ListaComprobantes = (List<EComprobante>)ViewState["Lista"];
+
+            foreach (EComprobante item in ListaComprobantes)
+            {
+                item.Sel = check;
+            }
+
+            ViewState["Lista"] = ListaComprobantes;
+        }
+
+        protected void GridViewDatos_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.Pager && !(GridViewDatos.DataSource == null))
+            {
+                Label _TotalPags = (Label)e.Row.FindControl("lblTotalNumberOfPages");
+                _TotalPags.Text = GridViewDatos.PageCount.ToString();
+
+                DropDownList list = (DropDownList)e.Row.FindControl("paginasDropDownList");
+
+                for (int i = 1; i <= GridViewDatos.PageCount; i++)
+                {
+                    list.Items.Add(i.ToString());
+                }
+                list.SelectedValue = (GridViewDatos.PageIndex + 1).ToString();
+            }
+        }
+
+        protected void btnConsultar_Click(object sender, EventArgs e)
+        {
+            lblCant.Text = "";
+            lblCantRegAcep.Visible = false;
+            lblCantRegRec.Visible = false;
+
+            lstComprobantes.Visible = true;
+            lstResumenDiario.Visible = false;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                //if (!wucFecha1.DateFechaInicio.HasValue && !wucFecha1.DateFechaFin.HasValue) return;
+
+                if (rblResumenes.SelectedValue.Length > 0)
+                {
+                    lblCant.Text = "Debe especificar los tipos de comprobantes a consultar";
+                    return;
+                }
+
+                //DateTime fechainicio = wucFecha1.DateFechaInicio.Value;
+                //DateTime fechafin = wucFecha1.DateFechaFin.Value;
+
+                DateTime fechainicio, fechafin;
+                string mensajeFecha;
+                if (!ValidarFecha(txtFechaInicio.Text, "Fecha desde", true, out fechainicio, out mensajeFecha) ||
+                    !ValidarFecha(txtFechaFin.Text, "Fecha hasta", true, out fechafin, out mensajeFecha))
+                {
+                    lblCant.Text = mensajeFecha;
+                    return;
+                }
+                if (fechafin < fechainicio)
+                {
+                    lblCant.Text = "La fecha hasta debe ser igual o posterior a la fecha desde";
+                    return;
+                }
+
+                String tipocomp = rblTipoComprobante.SelectedValue;
+                String strEstado = rbEstado.SelectedValue;
+                String strPuntoVenta1 = ddlbPuntoVenta1.SelectedValue.ToString();
+                String strPuntoVenta2 = ddlbPuntoVenta2.SelectedValue.ToString();
+
+                ListaComprobantes = comprobante.ObtenerComprobantes(fechainicio, fechafin, tipocomp, strPuntoVenta1, strPuntoVenta2, strEstado);
+
+                lblCant.Text = "Se encontraron " + ListaComprobantes.Count.ToString() + " registros";
+
+                ViewState["Lista"] = ListaComprobantes;
+
+                CargarData(ListaComprobantes);
+            }
+            catch (Exception ex)
+            {
+                lblCant.Text = ex.Message;
+            }
+        }
+
+        private void CargarData(List<EComprobante> listacomprobantes)
+        {
+            GridViewDatos.DataSource = listacomprobantes;
+            GridViewDatos.DataBind();
+        }
+
+        protected void btnProcesar_Click(object sender, EventArgs e)
+        {
+            btnProcesar.Enabled = false;
+            lblCant.Text = "";
+            lblCantRegAcep.Visible = false;
+            lblCantRegRec.Visible = false;
+
+            lstComprobantes.Visible = true;
+            lstResumenDiario.Visible = false;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                if (ViewState["Lista"] == null)
+                {
+                    lblCant.Text = "No existe información a procesar";
+                    return;
+                }
+
+                ListaComprobantes = (List<EComprobante>)ViewState["Lista"];
+
+                if (ListaComprobantes.Count() == 0)
+                {
+                    lblCant.Text = "No existe información a procesar";
+                    return;
+                }
+
+                int cant = 0;
+
+                foreach (GridViewRow dtgItem in GridViewDatos.Rows)
+                {
+                    CheckBox Sel = ((CheckBox)GridViewDatos.Rows[dtgItem.RowIndex].FindControl("chkAccept"));
+
+                    if (Sel.Checked)
+                    {
+                        int id = Convert.ToInt32(GridViewDatos.DataKeys[dtgItem.RowIndex].Values[0]);
+
+                        EComprobante comp = ListaComprobantes.Find(x => x.Id == id);
+                        comp.Sel = true;
+                    }
+                }
+
+                cant = ListaComprobantes.FindAll(x => x.Sel == true).Count();
+
+                if (cant == 0)
+                {
+                    lblCant.Text = "Debe seleccionar al menos un comprobante";
+                    return;
+                }
+
+                ListaComprobantes = comprobante.ProcesarComprobantes(ListaComprobantes);
+
+                lblCantRegAcep.Visible = true;
+                lblCantRegRec.Visible = true;
+
+                lblCantRegAcep.Text = ListaComprobantes.FindAll(x => x.CDR == "0" && x.Sel == true).Count().ToString() + " Registros Aceptados";
+                lblCantRegRec.Text = ListaComprobantes.FindAll(x => x.CDR != "0" && x.Sel == true).Count().ToString() + " Registros Rechazados";
+
+                CargarData(ListaComprobantes);
+            }
+            catch (Exception ex)
+            {
+                lblCant.Text = ex.Message;
+                lblCantRegAcep.Visible = false;
+                lblCantRegAcep.Visible = false;
+            }
+            finally
+            {
+                btnProcesar.Enabled = true;
+            }
+        }
+
+        protected void rblTipoComprobante_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            rblResumenes.ClearSelection();
+        }
+
+        protected void rblResumenes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            rblTipoComprobante.ClearSelection();
+        }
+
+        protected void btnConsultarRD_Click(object sender, EventArgs e)
+        {
+            lstComprobantes.Visible = false;
+            lstResumenDiario.Visible = true;
+            gvResumenDiario.Visible = false;
+
+
+
+
+            lblResultadoResumenDiario.Visible = true;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                //if (!wucFechaRD.DateFechaInicio.HasValue) return;
+                //DateTime fecha = wucFechaRD.DateFechaInicio.Value;
+                if (txtFechaRD.Text == String.Empty) 
+                {
+                    lblResultadoResumenDiario.Text = "Ingrese fecha de resumen diario";
+                    return;    
+                }
+
+                DateTime fecha;
+                string mensajeFecha;
+                if (!ValidarFecha(txtFechaRD.Text, "Fecha de resumen diario", false, out fecha, out mensajeFecha))
+                {
+                    lblResultadoResumenDiario.Text = mensajeFecha;
+                    return;
+                }
+
+                DateTime fechainicio = new DateTime(fecha.Year, fecha.Month, fecha.Day, 0, 0, 0);
+                DateTime fechafin = new DateTime(fecha.Year, fecha.Month, fecha.Day, 23, 59, 59);
+
+                String tipocomp = rblTipoComprobante.SelectedValue;
+
+                /////ListaResumenDiario = comprobante.ObtenerResumenDiario(fechainicio, fechafin, tipocomp);
+                ListaResumenDiario = comprobante.ObtenerResumenDiario2018(fechainicio, fechafin, tipocomp);
+
+                lblResultadoResumenDiario.Text = "Se encontraron " + ListaResumenDiario.Count.ToString() + " resumenes";
+
+                gvResumenDiario.Visible = ListaResumenDiario.Count > 0;
+
+                ViewState["ListaResumenDiario"] = ListaResumenDiario;
+
+                CargarDataResumen(ListaResumenDiario);
+            }
+            catch (Exception ex)
+            {
+                lblResultadoResumenDiario.Text = ex.Message;
+                gvResumenDiario.Visible = false;
+            }
+        }
+
+        private void CargarDataResumen(List<EResumenDarioClient> listaresumen)
+        {
+            gvResumenDiario.DataSource = listaresumen;
+            gvResumenDiario.DataBind();
+        }
+
+        protected void gvResumenDiario_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                HyperLink lnkTicket = (HyperLink)e.Row.FindControl("lnkTicket");
+                string strTicket = lnkTicket.Text.Trim();
+
+                lnkTicket.NavigateUrl = "ValidarTicket.aspx?ticket=" + strTicket + "&tipo=RD";
+            }
+            if (e.Row.RowType == DataControlRowType.Pager && !(gvResumenDiario.DataSource == null))
+            {
+                Label _TotalPags = (Label)e.Row.FindControl("lblTotalNumberOfPages");
+                _TotalPags.Text = gvResumenDiario.PageCount.ToString();
+
+                DropDownList list = (DropDownList)e.Row.FindControl("paginasDropDownList");
+
+                for (int i = 1; i <= gvResumenDiario.PageCount; i++)
+                {
+                    list.Items.Add(i.ToString());
+                }
+                list.SelectedValue = (gvResumenDiario.PageIndex + 1).ToString();
+            }
+        }
+
+        protected void gvResumenDiario_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvResumenDiario.PageIndex = e.NewPageIndex;
+
+            ListaResumenDiario = (List<EResumenDarioClient>)ViewState["ListaResumenDiario"];
+
+            CargarDataResumen(ListaResumenDiario);
+        }
+
+        protected void GoPageResumenDiario(object sender, System.EventArgs e)
+        {
+            DropDownList oIraPag = (DropDownList)sender;
+            Int32 iNumPag = 0;
+
+            if (Int32.TryParse(oIraPag.Text.Trim(), out iNumPag) && iNumPag > 0 && iNumPag <= gvResumenDiario.PageCount)
+            {
+                if ((Int32.TryParse(oIraPag.Text.Trim(), out iNumPag) && iNumPag > 0) && iNumPag <= gvResumenDiario.PageCount)
+                    gvResumenDiario.PageIndex = iNumPag - 1;
+                else
+                    gvResumenDiario.PageIndex = 0;
+            }
+
+            ListaResumenDiario = (List<EResumenDarioClient>)ViewState["ListaResumenDiario"];
+
+            CargarDataResumen(ListaResumenDiario);
+        }
+
+        protected void btnProcesarRD_Click(object sender, EventArgs e)
+        {
+            btnProcesarRD.Enabled = false;
+            lstResumenDiario.Visible = true;
+            lblResultadoResumenDiario.Visible = true;
+            lblResultadoResumenDiario.Text = "";
+            int cant = 0;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                if (ViewState["ListaResumenDiario"] == null)
+                {
+                    lblResultadoResumenDiario.Text = "No existe información a procesar";
+                    return;
+                }
+
+                ListaResumenDiario = (List<EResumenDarioClient>)ViewState["ListaResumenDiario"];
+                cant = ListaResumenDiario.Count();
+
+                if (cant == 0)
+                {
+                    lblResultadoResumenDiario.Text = "No existe información a procesar";
+                    return;
+                }
+                if (cant > 2500)
+                {
+                    lblResultadoResumenDiario.Text = "El proceso soporta hasta 2500 registros, coordinar con GTI..";
+                    return;
+                }
+
+                if (txtFechaRD.Text == String.Empty)
+                {
+                    lblResultadoResumenDiario.Text = "Debe seleccionar una fecha para procesar el resumen diario";
+                    return;
+                }
+
+                //ListaComprobantes = comprobante.ProcesarResumenDiario(ListaResumenDiario, wucFechaRD.DateFechaInicio.Value);
+                DateTime fecha;
+                string mensajeFecha;
+                if (!ValidarFecha(txtFechaRD.Text, "Fecha de resumen diario", false, out fecha, out mensajeFecha))
+                {
+                    lblResultadoResumenDiario.Text = mensajeFecha;
+                    return;
+                }
+                //ListaResumenDiario = comprobante.ProcesarResumenDiario(ListaResumenDiario, fecha);
+                ListaResumenDiario = comprobante.ProcesarResumenDiario2018(ListaResumenDiario, fecha);
+
+                lblResultadoResumenDiario.Text = "Se procesaron los resúmenes diarios";
+                //lblCantRegAcep.Text = ListaComprobantes.FindAll(x => x.Versionestruct == "DECLARADO" && x.Sel == true).Count().ToString() + " Registros Procesados";
+
+                //CargarDataResumen(ListaResumenDiario);
+                btnConsultarRD_Click( sender,  e);
+            }
+            catch (Exception ex)
+            {
+                lblResultadoResumenDiario.Text = ex.Message;
+            }
+            finally {
+                btnProcesarRD.Enabled = true;
+            }
+        }
+
+        protected void btnConsultarCB_Click(object sender, EventArgs e)
+        {
+            lstComprobantes.Visible = false;
+            lstComunicacionBaja.Visible = true;
+            gvComunicacion.Visible = false;
+
+            lblComunicacionBaja.Visible = true;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                //if (!wucFechaCB.DateFechaInicio.HasValue) return;
+
+                //DateTime fecha = wucFechaCB.DateFechaInicio.Value;
+                if (txtFechaCB.Text == String.Empty)
+                {
+                    lblComunicacionBaja.Text = "Ingrese fecha de comunicación de baja";
+                    return;
+                }
+
+                DateTime fecha;
+                string mensajeFecha;
+                if (!ValidarFecha(txtFechaCB.Text, "Fecha de comunicación de baja", false, out fecha, out mensajeFecha))
+                {
+                    lblComunicacionBaja.Text = mensajeFecha;
+                    return;
+                }
+
+                DateTime fechainicio = new DateTime(fecha.Year, fecha.Month, fecha.Day, 0, 0, 0);
+                DateTime fechafin = new DateTime(fecha.Year, fecha.Month, fecha.Day, 23, 59, 59);
+
+                ListaComunicacion = comprobante.ObtenerComunicacionesBaja(fechainicio, fechafin);
+
+                lblComunicacionBaja.Text = "Se encontraron " + ListaComunicacion.Count.ToString() + " comunicaciones";
+
+                gvComunicacion.Visible = ListaComunicacion.Count > 0;
+
+                ViewState["ListaComunicacion"] = ListaComunicacion;
+
+                CargarDataComunicacion(ListaComunicacion);
+            }
+            catch (Exception ex)
+            {
+                lblComunicacionBaja.Text = ex.Message;
+                gvComunicacion.Visible = false;
+            }
+        }
+
+        private void CargarDataComunicacion(List<EComunicacionBajaClient> listaresumen)
+        {
+            gvComunicacion.DataSource = listaresumen;
+            gvComunicacion.DataBind();
+        }
+
+        protected void gvComunicacion_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                HyperLink lnkTicket = (HyperLink)e.Row.FindControl("lnkTicket");
+                string strTicket = lnkTicket.Text.Trim();
+                strTicket = strTicket.Replace("Se genero el Número Ticket : ", "");
+
+                lnkTicket.NavigateUrl = "ValidarTicket.aspx?ticket=" + strTicket + "&tipo=CB";
+            }
+            if (e.Row.RowType == DataControlRowType.Pager && !(gvComunicacion.DataSource == null))
+            {
+                Label _TotalPags = (Label)e.Row.FindControl("lblTotalNumberOfPages");
+                _TotalPags.Text = gvComunicacion.PageCount.ToString();
+
+                DropDownList list = (DropDownList)e.Row.FindControl("paginasDropDownList");
+
+                for (int i = 1; i <= gvComunicacion.PageCount; i++)
+                {
+                    list.Items.Add(i.ToString());
+                }
+                list.SelectedValue = (gvComunicacion.PageIndex + 1).ToString();
+            }
+        }
+
+        protected void gvComunicacion_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvComunicacion.PageIndex = e.NewPageIndex;
+
+            ListaComunicacion = (List<EComunicacionBajaClient>)ViewState["ListaComunicacion"];
+
+            CargarDataComunicacion(ListaComunicacion);
+        }
+
+        protected void GoPageComunicacion(object sender, System.EventArgs e)
+        {
+            DropDownList oIraPag = (DropDownList)sender;
+            Int32 iNumPag = 0;
+
+            if (Int32.TryParse(oIraPag.Text.Trim(), out iNumPag) && iNumPag > 0 && iNumPag <= gvComunicacion.PageCount)
+            {
+                if ((Int32.TryParse(oIraPag.Text.Trim(), out iNumPag) && iNumPag > 0) && iNumPag <= gvComunicacion.PageCount)
+                    gvComunicacion.PageIndex = iNumPag - 1;
+                else
+                    gvComunicacion.PageIndex = 0;
+            }
+
+            ListaComunicacion = (List<EComunicacionBajaClient>)ViewState["ListaComunicacion"];
+
+            CargarDataComunicacion(ListaComunicacion);
+        }
+
+        protected void btnProcesarCB_Click(object sender, EventArgs e)
+        {
+            btnProcesarCB.Enabled = false;
+            lstComunicacionBaja.Visible = true;
+            lblComunicacionBaja.Visible = true;
+            lblComunicacionBaja.Text = "";
+            int cant = 0;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                if (ViewState["ListaComunicacion"] == null)
+                {
+                    lblComunicacionBaja.Text = "No existe información a procesar";
+                    return;
+                }
+
+                ListaComunicacion = (List<EComunicacionBajaClient>)ViewState["ListaComunicacion"];
+                cant = ListaComunicacion.Count();
+
+                if (cant == 0)
+                {
+                    lblComunicacionBaja.Text = "No existe información a procesar";
+                    return;
+                }
+
+                //if (!wucFechaCB.DateFechaInicio.HasValue)
+                //{
+                //    lblComunicacionBaja.Text = "Debe seleccionar una Fecha para procesar la comunicacion baja";
+                //    return;
+                //}
+                if (txtFechaCB.Text == String.Empty)
+                {
+                    lblComunicacionBaja.Text = "Debe seleccionar una Fecha para procesar la comunicacion baja";
+                    return;
+                }
+
+                DateTime fecha;
+                string mensajeFecha;
+                if (!ValidarFecha(txtFechaCB.Text, "Fecha de comunicación de baja", false, out fecha, out mensajeFecha))
+                {
+                    lblComunicacionBaja.Text = mensajeFecha;
+                    return;
+                }
+
+                ListaComunicacion = comprobante.ProcesarComunicacionBaja(ListaComunicacion, fecha);
+
+                lblComunicacionBaja.Text = "Se procesaron las comunicaciones baja";
+
+                CargarDataComunicacion(ListaComunicacion);
+            }
+            catch (Exception ex)
+            {
+                lblComunicacionBaja.Text = ex.Message;
+            }
+            finally {
+                btnProcesarCB.Enabled = true;
+            }
+        }
+
+        protected void btnActualizar_Click(object sender, EventArgs e)
+        {
+            lblCant.Text = "";
+            lblCantRegAcep.Visible = false;
+            lblCantRegRec.Visible = false;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                if (ViewState["Lista"] == null)
+                {
+                    lblCant.Text = "No existe información a procesar";
+                    return;
+                }
+
+                ListaComprobantes = (List<EComprobante>)ViewState["Lista"];
+
+                if (ListaComprobantes.Count() == 0)
+                {
+                    lblCant.Text = "No existe información a procesar";
+                    return;
+                }
+
+                int cant = 0;
+
+                foreach (GridViewRow dtgItem in GridViewDatos.Rows)
+                {
+                    CheckBox Sel = ((CheckBox)GridViewDatos.Rows[dtgItem.RowIndex].FindControl("chkAccept"));
+
+                    if (Sel.Checked)
+                    {
+                        int id = Convert.ToInt32(GridViewDatos.DataKeys[dtgItem.RowIndex].Values[0]);
+
+                        EComprobante comp = ListaComprobantes.Find(x => x.Id == id);
+                        comp.Sel = true;
+                    }
+                }
+
+                cant = ListaComprobantes.FindAll(x => x.Sel == true).Count();
+
+                if (cant == 0)
+                {
+                    lblCant.Text = "Debe seleccionar al menos un comprobante";
+                    return;
+                }
+
+                comprobante.ActualizarComprobantesEnOracle(ListaComprobantes);
+            }
+            catch (Exception ex)
+            {
+                lblCant.Text = ex.Message;
+                lblCantRegAcep.Visible = false;
+                lblCantRegAcep.Visible = false;
+            }
+        }
+
+        protected void btnGetCDR_Click(object sender, EventArgs e)
+        {
+            String strRUC = "20100072751";
+
+            btnProcesar.Enabled = false;
+            //lblCant.Text = "";
+            lblCantRegAcep.Visible = false;
+            lblCantRegRec.Visible = false;
+
+            lstComprobantes.Visible = true;
+            //lstResumenDiario.Visible = false;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                if (ViewState["Lista"] == null)
+                {
+                    //lblCant.Text = "No existe información a procesar";
+                    return;
+                }
+
+                ListaComprobantes = (List<EComprobante>)ViewState["Lista"];
+
+                if (ListaComprobantes.Count() == 0)
+                {
+                    //lblCant.Text = "No existe información a procesar";
+                    return;
+                }
+
+                foreach (GridViewRow dtgItem in GridViewDatos.Rows)
+                {
+                    CheckBox Sel = ((CheckBox)GridViewDatos.Rows[dtgItem.RowIndex].FindControl("chkAccept"));
+
+                    if (Sel.Checked)
+                    {
+                        int id = Convert.ToInt32(GridViewDatos.DataKeys[dtgItem.RowIndex].Values[0]);
+
+                        EComprobante comp = ListaComprobantes.Find(x => x.Id == id);
+
+                        String serie = comp.Serie;
+                        string strFecha = comp.Fecha.ToString("yyyyMMdd");
+                        int correlativo = (int)comp.Correlativo;
+                        String strTipo = comp.DocumentoPago;
+
+                        comp.Sel = true;
+
+                        EResultadoProceso resultado = comprobante.ValidarCDR(strRUC, strTipo, serie, correlativo, strFecha);
+
+                        comp.CDR = resultado.CDR;
+                        if (comp.CDR == "0")
+                            comp.Versionestruct = "ACEPTADO";
+                        else
+                            comp.Versionestruct = "RECHAZADO";
+
+                        resultado.MsgCDR = resultado.MsgCDR.Replace("'", "");
+                        comp.MsgCDR = resultado.MsgCDR;
+
+                        //Actualizar Registro
+                        comprobante.ActualizarProcesoCDR(comp);
+                    }
+                }
+
+                CargarData(ListaComprobantes);
+
+            }
+            catch (Exception ex)
+            {
+                //lblCant.Text = ex.Message;
+                lblCantRegAcep.Visible = false;
+                lblCantRegAcep.Visible = false;
+            }
+            finally
+            {
+                btnProcesar.Enabled = true;
+            }
+        }
+
+        protected void btnGenerarPDF_Click(object sender, EventArgs e)
+        {
+            btnGenerarPDF.Enabled = false;
+            lblCant.Text = "";
+            lblCantRegAcep.Visible = false;
+            lblCantRegRec.Visible = false;
+
+            lstComprobantes.Visible = true;
+            lstResumenDiario.Visible = false;
+
+            try
+            {
+                BComprobante comprobante = new BComprobante();
+
+                if (ViewState["Lista"] == null)
+                {
+                    lblCant.Text = "No existe información a procesar";
+                    return;
+                }
+
+                ListaComprobantes = (List<EComprobante>)ViewState["Lista"];
+
+                if (ListaComprobantes.Count() == 0)
+                {
+                    lblCant.Text = "No existe información a procesar";
+                    return;
+                }
+
+                int cant = 0;
+
+                foreach (GridViewRow dtgItem in GridViewDatos.Rows)
+                {
+                    CheckBox Sel = ((CheckBox)GridViewDatos.Rows[dtgItem.RowIndex].FindControl("chkAccept"));
+
+                    if (Sel.Checked)
+                    {
+                        int id = Convert.ToInt32(GridViewDatos.DataKeys[dtgItem.RowIndex].Values[0]);
+
+                        EComprobante comp = ListaComprobantes.Find(x => x.Id == id);
+                        comp.Sel = true;
+                    }
+                }
+
+                cant = ListaComprobantes.FindAll(x => x.Sel == true).Count();
+
+                if (cant == 0)
+                {
+                    lblCant.Text = "Debe seleccionar al menos un comprobante";
+                    return;
+                }
+
+                ListaComprobantes = comprobante.ProcesarComprobantesPDF(ListaComprobantes);
+
+                lblCantRegAcep.Visible = true;
+                lblCantRegRec.Visible = true;
+
+                lblCantRegAcep.Text = ListaComprobantes.FindAll(x => x.CDR == "0" && x.Sel == true).Count().ToString() + " Registros Aceptados";
+                lblCantRegRec.Text = ListaComprobantes.FindAll(x => x.CDR != "0" && x.Sel == true).Count().ToString() + " Registros Rechazados";
+
+                CargarData(ListaComprobantes);
+            }
+            catch (Exception ex)
+            {
+                lblCant.Text = ex.Message;
+                lblCantRegAcep.Visible = false;
+                lblCantRegAcep.Visible = false;
+            }
+            finally
+            {
+                btnGenerarPDF.Enabled = true;
+            }
+        }
+    }
+}

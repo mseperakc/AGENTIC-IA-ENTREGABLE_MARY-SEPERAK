@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+
+<configuration>
+  <appSettings>
+    <add key="RutaTemporal" value="D:\AccuratechSoftware\sunatinterface\SunatFiles"/>
+    <add key="RUC_EDITORA" value="20100072751"/>
+    <add key="TIPODOCUMENTO_EDITORA" value="6"/>
+    <add key="NOMBRECOMERCIAL_EDITORA" value="EDITORA PERU"/>
+    <add key="UBIGEO_EDITORA" value="150101"/>
+    <add key="DIRECCION_EDITORA" value="Av. Alfonso Ugarte N° 873"/>
+    <add key="URBANIZACION_EDITORA" value="Urb. Lima Industrial"/>
+    <add key="DEPARTAMENTO_EDITORA" value="Lima"/>
+    <add key="PROVINCIA_EDITORA" value="Lima"/>
+    <add key="DISTRITO_EDITORA" value="Lima"/>
+    <add key="CODIGOPAIS_EDITORA" value="PE"/>
+    <add key="RAZONSOCIAL_EDITORA" value="Empresa Peruana de Servicios Editoriales S.A. - EDITORA PERU"/>
+    <add key="TELEFONO_EDITORA" value="315-0400 ANEXO 2217"/>
+    <add key="TELEFONO_RETENCION" value="315-0400 ANEXO 2215"/>
+    <add key="DIRECCION_ALTERNATIVA_EDITORA" value="AV.ECHENIQUE Y EL INCA N°898-HUACHO-HUAURA-LIMA"/>
+    <add key="RUTA_FONTS" value="C:\Windows\Fonts\"/>
+    <add key="INCLUIR_CODIGOBARRAS" value="SI"/>
+
+    <!--<add key="Firmante" value="ZAVALETA VERTIZ NELLY PATRICIA"/>
+    <add key="HuellaFirmante" value="‎36a2ebee503faff56e5aa508b1af9941288cd244"/>-->
+	  <!--<add key="Firmante" value="QUISPE CONTRERAS ROSARIO CONSTANTINA"/>
+    <add key="HuellaFirmante" value="‎f2658be91417e81fd98ea79e0b8a087435748e75"/>-->
+	  <!--
+	<add key="Firmante" value="TORRES MORALES MIGUEL MARTIN"/>
+	<add key="HuellaFirmante" value="‎7e03b9225a1c5e728058a59054fba8c8b21c15f4"/>
+    -->
+	  <!--
+	  <add key="Firmante" value="MIGUEL MARTIN TORRES MORALES"/>
+	  <add key="HuellaFirmante" value="‎95ec6415844fafcc1bbfa73a5ea15d81b0fa0d43"/>
+	  -->
+	  <!-- Certificado 2022 New hasta 21/12/2025 
+	  <add key="Firmante" value="AGUSTIN RODOLFO SALDAÑA MURRUGARRA"/>
+	  <add key="HuellaFirmante" value="‎d82530c06dd1b1395f8639f4e190bccc9916add8"/>
+	  -->
+	  
+	  <!-- Certificado 2025 New-->
+    <add key="Firmante" value="SOFTWARE DE FACTURACION ELECTRONICA"/>
+    <add key="HuellaFirmante" value="‎c92aa7fe3dfcef06324b1c79ffe75ea27b7ea39f"/>
+
+	  
+    <add key="Encoding" value="UTF-8"/> <!-- UTF8/ISO-8859-1-->
+    <add key="EncodingRetencion" value="ISO-8859-1"/> <!-- UTF8/ISO-8859-1-->
+    <add key="EnviarFactura" value ="SI"/><!-- SI o NO -->
+    <add key="EnviarBoleta" value ="SI"/><!-- SI o NO -->
+    <add key="EnviarCredito" value ="NO" /><!-- SI o NO -->
+    <add key="EnviarDebito" value ="SI" /><!-- SI o NO -->
+    <add key="EnviarComunicacionBaja" value ="SI"/><!-- SI o NO -->
+    <add key="EnviarResumenDiario" value ="NO"/><!-- SI o NO -->
+    <add key="EnviarRetencion" value ="SI"/><!-- SI o NO -->
+    <add key="EnviarReversion" value ="SI"/><!-- SI o NO -->
+    <add key="MENSAJE_RESOLUCION_SUNAT" value="Autorizado para ser emisor electrónico mediante la Resolución de Intendencia N° 018-005-0001974/SUNAT. Para consultar el comprobante ingresar a http://www.editoraperu.pe/ConsultaCE"/>
+    <add key="MENSAJE_CONSULTA" value="Para consultar el comprobante ingresar a http://www.editoraperu.pe/ConsultaCE"/>
+    <add key="MENSAJE_AGENTE_RETENCION" value="Según Resolución de Superintendencia N° 037-2002/SUNAT nuestra empresa ha sido designado Agente de Retención. Sírvase NO efectuar la retención del 3% al IGV a este comprobante"/>
+    <add key="MENSAJE_DETRACCION" value="Operación sujeta al sistema de pago de obligaciones tributarias con el Gobierno Central; Código 037; porcentaje 12,00%; Banco de la Nación Cta. Cte. No. 00000426032"/>
+    <add key="MENSAJE_DETRACCION_2019" value="Operación sujeta al sistema de pago de obligaciones tributarias con el Gobierno Central 10% al Banco de la Nación Cta. Cte. N° 00-000-426032"/>
+    <add key="MENSAJE_DETRACCION_2018" value="Operación sujeta al sistema de pago de obligaciones tributarias con el Gobierno Central; Código 037; porcentaje 12,00%; Banco de la Nación Cta. Cte. No. 00000426032"/>
+    <add key="MENSAJE_DETRACCION_NO" value="Operación NO sujeta al pago de detracción"/>
+    <add key="DETRACCION_CUENTA" value="00000426032"/>
+    <add key="PUNTO_VENTA_SIN_DIRECCION" value="F077,F078,B077,B078" />
+    <add key="COLOR_TEXTO" value="#000000" />
+    <add key="UBLVersionID" value="2.0" />
+    <add key="CustomizationID" value="1.0" />
+    <add key="UBLVersionID_ResumenDiario" value="2.1" />
+    <add key="LINEAS_MAX_PAGINA" value="35" />
+    <!--BETA OSE-->
+    <!--<add key="OSE_USUARIO" value="20100072751MODDATOS" />
+    <add key="OSE_PASSWORD" value="MODDATOS" />-->
+    <!--PRODUCCION OSE-->
+	<add key="OSE_USUARIO" value="20100072751OSE" />
+    <add key="OSE_PASSWORD" value="UGBZANPT8R" />
+	
+   </appSettings>
+  <connectionStrings>
+	  <add name="ConexionSQLOLD" connectionString="Data Source=172.20.0.53;Initial Catalog=comprobanteelectronico;User Id=compelec; Password=fe#sun@t$ep" providerName="System.Data.SqlClient"/>
+	  <add name="ConexionSQL" connectionString="Data Source=172.20.0.132;Initial Catalog=comprobanteelectronico;User Id=compelec_app; Password=fe#sun@t$ep" providerName="System.Data.SqlClient"/>
+	  <!--<add name="ConexionGespo" connectionString="Data Source=SW-DESASRV\MSSQL2008;Initial Catalog=GespoPostFE;User ID=sa;pwd=12345678; Connect TimeOut=7200" providerName="System.Data.SqlClient"/>-->
+	  <add name="ConexionGespoOLD" connectionString="Data Source=172.20.0.53;Initial Catalog=Gespo;User ID=gespo_app;pwd=Ed1t0r4$P3ru2022; Connect TimeOut=7200" providerName="System.Data.SqlClient"/>
+	  <add name="ConexionGespo" connectionString="Data Source=172.20.0.132;Initial Catalog=Gespo;User ID=gespo_app;pwd=8VC537D4RE6; Connect TimeOut=7200" providerName="System.Data.SqlClient"/>
+  </connectionStrings>
+
+  <system.serviceModel>
+    <bindings>
+      <basicHttpBinding>
+        <binding name="BillServicePortBinding" receiveTimeout="00:10:00" sendTimeout="00:10:00">
+          <security mode="Transport">
+          </security>
+        </binding>
+        
+        <!--<binding name="CurrencyServiceRetenciones" messageEncoding="Text">
+          <security mode="Transport" />
+        </binding>-->
+        
+        <binding name="CurrencyServiceRetenciones">
+          <security mode="Transport" />
+        </binding>
+        
+        <binding name="CurrencyServiceSoap">
+          <security mode="Transport" />
+        </binding>
+        
+        <binding name="BillConsultServicePortBinding">
+          <security mode="Transport" />
+        </binding>
+
+        <binding name="CurrencyServiceSoapOSE" receiveTimeout="00:10:00" sendTimeout="00:10:00">
+          <security mode="TransportWithMessageCredential" />
+        </binding>
+        
+        <!--<binding name="CurrencyServiceRetenciones" closeTimeout="00:01:00" openTimeout="00:01:00" receiveTimeout="00:10:00" 
+                 sendTimeout="00:01:00" allowCookies="false" bypassProxyOnLocal="false" maxBufferSize="65536" 
+                 maxBufferPoolSize="524288" maxReceivedMessageSize="65536" messageEncoding="Text" textEncoding="utf-8" 
+                 transferMode="Buffered" useDefaultWebProxy="true">
+          <readerQuotas maxDepth="32" maxStringContentLength="8192" maxArrayLength="16384" maxBytesPerRead="4096" maxNameTableCharCount="16384" />
+          <security mode="Transport">
+            <transport clientCredentialType="None" proxyCredentialType="None" realm="" />
+            <message clientCredentialType="UserName" algorithmSuite="Default" />
+          </security>
+        </binding>
+        <binding name="secured">
+          <security mode="TransportWithMessageCredential">
+            <message clientCredentialType="UserName" />
+          </security>
+        </binding>-->
+     
+      </basicHttpBinding>
+    </bindings>
+
+    <!-- beta comprobante-->
+    <!-- https://www.sunat.gob.pe/ol-ti-itcpfegem/billService -->
+    <!-- beta retenciones -->
+    <!-- https://www.sunat.gob.pe:443/ol-ti-itemision-otroscpe-gem-beta/billService -->
+	  
+	  <client>
+
+		  <!-- Retencion OSE PRODUCCION-->
+		  <endpoint address="https://ose.pe/ol-ti-itcpe/billService" binding="basicHttpBinding" bindingConfiguration="CurrencyServiceSoapOSE"
+					contract="IbillService" name="BillServicePortOSE" />
+
+		  <!-- retencion produccion OLD -->
+		  <endpoint address="https://www.sunat.gob.pe:443/ol-ti-itemision-otroscpe-gem/billService" binding="basicHttpBinding" bindingConfiguration="BillServicePortBinding"
+					contract="billService" name="BillServicePort">
+			  <headers>
+				  <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+					  <wsse:UsernameToken Id="ABC-123">
+						  <wsse:Username>20100072751USUARIO2</wsse:Username>
+						  <wsse:Password type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">maritza1234</wsse:Password>
+					  </wsse:UsernameToken>
+				  </wsse:Security>
+			  </headers>
+		  </endpoint>
+
+		  <!-- retencion beta
+      <endpoint address="https://e-beta.sunat.gob.pe:443/ol-ti-itemision-otroscpe-gem-beta/billService"
+                binding="basicHttpBinding" bindingConfiguration="BillServicePortBinding"
+                contract="billService" name="SunatRetenciones">
+        <headers>
+          <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="ABC-123" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+              <wsse:Username>20100072751MODDATOS</wsse:Username>
+              <wsse:Password type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">MODDATOS</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+      -->
+
+		  <!-- retencion produccion
+      <endpoint address="https://e-factura.sunat.gob.pe/ol-ti-itemision-otroscpe-gem/billService" binding="basicHttpBinding" bindingConfiguration="BillServicePortBinding"
+                contract="billService" name="BillServicePort">
+        <headers>
+          <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="ABC-123">
+              <wsse:Username>20100072751USUARIO2</wsse:Username>
+              <wsse:Password type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">maritza1234</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+      -->
+
+		  <!-- Comprobantes GetCDR-->
+		  <endpoint address="https://e-factura.sunat.gob.pe/ol-it-wsconscpegem/billConsultService"
+					binding="basicHttpBinding" bindingConfiguration="BillConsultServicePortBinding"
+					contract="billService" name="BillConsultServicePort">
+			  <headers>
+				  <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+					  <wsse:UsernameToken Id="ABC-123">
+						  <wsse:Username>20100072751USUARIO2</wsse:Username>
+						  <wsse:Password type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">maritza1234</wsse:Password>
+					  </wsse:UsernameToken>
+				  </wsse:Security>
+			  </headers>
+		  </endpoint>
+
+
+		  <!-- Comprobantes Digiflow Produccion
+      <endpoint address="https://ose.pe/ol-ti-itcpe/billService" binding="basicHttpBinding" bindingConfiguration="CurrencyServiceSoap" contract="Proxy.billService" name="CurrencyServiceSoap">
+        <headers>
+          <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="ABC-123">
+              <wsse:Username>20100072751OSE</wsse:Username>
+              <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">UGBZANPT8R</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+      -->
+
+		  <!-- Comprobantes produccion SUNAT-->
+		  <endpoint address="https://e-factura.sunat.gob.pe/ol-ti-itcpfegem/billService" binding="basicHttpBinding" bindingConfiguration="CurrencyServiceSoap" contract="Proxy.billService" name="CurrencyServiceSoap">
+			  <headers>
+				  <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+					  <wsse:UsernameToken Id="ABC-123">
+						  <wsse:Username>20100072751USUARIO2</wsse:Username>
+						  <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">maritza1234</wsse:Password>
+					  </wsse:UsernameToken>
+				  </wsse:Security>
+			  </headers>
+		  </endpoint>
+
+
+		  <!-- Comprobantes Beta
+      <endpoint address="https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService" binding="basicHttpBinding" bindingConfiguration="CurrencyServiceSoap" contract="Proxy.billService" name="CurrencyServiceSoap">
+        <headers>
+          <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="ABC-123">
+              <wsse:Username>20100072751MODDATOS</wsse:Username>
+              <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">MODDATOS</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+      -->
+
+		  <!-- Comprobantes OSE Digiflow PRODUCCION-->
+		  <endpoint address="https://ose.pe/ol-ti-itcpe/billService" binding="basicHttpBinding" bindingConfiguration="CurrencyServiceSoapOSE" contract="IbillService" name="CurrencyServiceSoapOSE" />
+
+		  <!--<endpoint address="https://e-beta.sunat.gob.pe:443/ol-ti-itemision-otroscpe-gem-beta/billService"
+          binding="basicHttpBinding" bindingConfiguration="BillServicePortBinding1"
+          contract="billService" name="BillServicePort.1" />-->
+		  <!--<endpoint address="https://www.sunat.gob.pe:443/ol-ti-itemision-otroscpe-gem-beta/billService" binding="basicHttpBinding" bindingConfiguration="CurrencyServiceSoap" contract="Proxy2.billService" name="SunatRetenciones">
+        <headers>
+          <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="ABC-123" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+              <wsse:Username>20100072751MODDATOS</wsse:Username>
+              <wsse:Password type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">MODDATOS</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+      
+      -->
+	  </client>
+    
+    <!--
+    <client>
+      <endpoint address="https://www.sunat.gob.pe:443/ol-ti-itemision-otroscpe-gem-beta/billService" binding="basicHttpBinding" bindingConfiguration="CurrencyServiceSoap" contract="Proxy.billService" name="CurrencyServiceSoap">
+        <headers>
+          <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="ABC-123">
+              <wsse:Username>12345678901ROMULUS</wsse:Username>
+              <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">ROMULUS001</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+    </client>
+    -->
+    
+    <!-- homologacion-->
+    <!--  
+    <client>
+      <endpoint address="https://www.sunat.gob.pe:443/ol-ti-itcpgem-sqa/billService" binding="basicHttpBinding" bindingConfiguration="CurrencyServiceSoap" contract="Proxy.billService" name="CurrencyServiceSoap">
+        <headers>
+          <wsse:Security mustUnderstand="0" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="ABC-123">
+              <wsse:Username>20100072751USUARIO2</wsse:Username>
+              <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">maritza1234</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+    </client>   
+   -->
+
+    
+    
+  </system.serviceModel>
+  
+    <system.web>
+      <httpRuntime executionTimeout="60000" maxRequestLength="20480" maxQueryStringLength="20480" appRequestQueueLimit="100"/>
+      <compilation targetFramework="4.0" debug="true"/>
+      <pages controlRenderingCompatibilityVersion="4.0"/>
+      <sessionState timeout="144000"></sessionState>
+    </system.web>
+
+</configuration>

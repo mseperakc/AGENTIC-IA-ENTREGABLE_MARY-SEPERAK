@@ -1,0 +1,423 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using Editora.DataAccess;
+using Editora.BusinessEntities;
+using Editora.BusinessLogic.oServicioComprobante;
+using System.Configuration;
+using System.Xml;
+namespace Editora.BusinessLogic
+{
+    public class BRetencion
+    {
+        public List<EComprobanteRetencion> ProcesarRetenciones(List<EComprobanteRetencion> listaRetenciones)
+        {
+            String grabaroracle = ConfigurationManager.AppSettings["GrabarOracle"];
+            String strCompania = ConfigurationManager.AppSettings["CompaniaRetencion"];
+            String enviarOSE = ConfigurationManager.AppSettings["EnviarOSE"];
+
+            BusinessServiceSoapClient client = new BusinessServiceSoapClient();
+            try
+            {
+                foreach (EComprobanteRetencion comp in listaRetenciones)
+                {
+                    EResultado result = null;
+
+                    //PROCESA SI SOLO ESTA SELECCIONADO
+                    if (!comp.Sel) continue;
+
+                    result = ProcesarRetencion(comp, enviarOSE);
+
+                    comp.Versionestruct = result.EstadoComprobante;
+                    comp.CDR = result.CDR; //Mensaje Largo
+                    comp.MsgCDR = result.MensajeResultadoSunat;
+
+                    if (comp.Versionestruct != null && comp.CDR != null && comp.MsgCDR != null)
+                    {
+                        string strFechaEnvio = DateTime.Now.ToString("dd/MM/yyyy");
+                        string strTipoEnvio = "0";
+                        if (enviarOSE == "SI")
+                            strTipoEnvio = "1";
+
+                        String _query = "UPDATE ttfacp820" + strCompania + 
+                            //" SET t$vestr = '" + comp.Versionestruct + "'" +
+                            " SET t$cdr = '" + (comp.CDR.Length > 4 ? comp.CDR.Substring(0, 4) : comp.CDR) + "'" +
+                            (comp.MsgCDR.Length > 0 ? ", t$msgcdr = '" + comp.MsgCDR + "'" : "") +
+                            ", t$fdta = to_date('" + strFechaEnvio + "','dd/mm/yyyy'), t$tien = " + strTipoEnvio +
+                            " WHERE t$prec = :p_prec AND t$prep = :p_prep";
+
+                        if (grabaroracle == "SI")
+                            new DComprobante().ActualizarTablaRetencion(_query, comp.Serie, comp.Correlativo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                client.Close();
+            }
+
+            return listaRetenciones;
+        }
+
+        public List<EComprobanteRetencion> ObtenerRetenciones(DateTime fechainicio, DateTime fechafin, String pstrEstado)
+        {
+            String strCompania = ConfigurationManager.AppSettings["CompaniaRetencion"];
+
+            string _queryCab = "SELECT a.t$docd, a.t$prec, a.t$prep, a.t$csun, a.t$rucn, a.t$fnam, a.t$rrte "+
+                ",a.t$pret,a.t$obsr, a.t$amnt$r, a.t$cmon$r, a.t$amnt$p, a.t$cmon$p, a.t$cdr, a.t$msgcdr,a.t$ley1, a.t$ley2, a.t$ley3 " + 
+                ", b.t$namc, b.t$namd " +
+                "FROM ttfacp820" + strCompania + " a left outer join ttccom020" + strCompania + " b on (a.t$rucn = b.t$rucn$d) " +
+                " WHERE a.t$docd >= to_date('" + fechainicio.ToString("MM/dd/yyyy") + "','mm/dd/yyyy')" +
+                " AND a.t$docd <= to_date('" + fechafin.ToString("MM/dd/yyyy") + "','mm/dd/yyyy')" +
+                " AND a.t$prec = 'R001' " +
+                (pstrEstado.Equals("1") ? " AND (a.t$cdr > '0' or a.t$cdr = ' ') " : " AND a.t$cdr = '0' ") +
+                " AND EXISTS (select d.* from ttfacp800" + strCompania + " d where d.t$prec= a.t$prec and d.t$prep = a.t$prep and d.t$anul<>'1' ) " + 
+               " order by a.t$prec, a.t$prep";
+
+            string _queryDet = "SELECT * FROM ttfacp821" + strCompania +
+                " WHERE t$docd >= to_date('" + fechainicio.ToString("MM/dd/yyyy") + "','mm/dd/yyyy')" +
+                " AND t$docd <= to_date('" + fechafin.ToString("MM/dd/yyyy") + "','mm/dd/yyyy')";
+
+            DataTable dtCabecera = FabricaSingleton<DComprobante>.Crear().ObtenerTabla(_queryCab);
+            DataTable dtDetalle = FabricaSingleton<DComprobante>.Crear().ObtenerTabla(_queryDet);
+
+            using (XmlTextWriter xmlStream = new XmlTextWriter(@"D:\AccuratechSoftware\sunatinterface\SunatFiles\cabeceraRetencion.XML", Encoding.UTF8))
+            {
+                //set xml to be formatted so it can be easily red by human
+                xmlStream.Formatting = Formatting.Indented;
+                xmlStream.Indentation = 4;
+
+
+                //write xml to file
+                xmlStream.WriteStartDocument();
+                dtCabecera.WriteXml(xmlStream);
+            }
+
+            using (XmlTextWriter xmlStream = new XmlTextWriter(@"D:\AccuratechSoftware\sunatinterface\SunatFiles\detalleRetencion.XML", Encoding.UTF8))
+            {
+                //set xml to be formatted so it can be easily red by human
+                xmlStream.Formatting = Formatting.Indented;
+                xmlStream.Indentation = 4;
+
+
+                //write xml to file
+                xmlStream.WriteStartDocument();
+                dtDetalle.WriteXml(xmlStream);
+            }
+
+            List<EComprobanteRetencion> listaRetenciones = new List<EComprobanteRetencion>();
+            //List<EComprobanteRetencion> listadetcomprobante = new List<EComprobanteRetencion>();
+
+            Int32 contador = 1;
+            foreach (DataRow cabecera in dtCabecera.Rows)
+            {
+                EComprobanteRetencion comp = new EComprobanteRetencion();
+                comp.Id = contador;
+                comp.Sel = false;
+                contador = contador + 1;
+
+                comp.FechaEmision = cabecera["t$docd"] != null ? Convert.ToDateTime(cabecera["t$docd"]) : DateTime.Now;
+                comp.Serie = cabecera["t$prec"] != null ? cabecera["t$prec"].ToString().Trim() : String.Empty;
+                comp.Correlativo = cabecera["t$prep"] != null ? Convert.ToInt64(cabecera["t$prep"]) : (Int64)0;
+                comp.TipoDocumento = cabecera["t$csun"] != null ? cabecera["t$csun"].ToString().Trim() : String.Empty;
+                comp.RUC = cabecera["t$rucn"] != null ? cabecera["t$rucn"].ToString().Trim() : String.Empty;
+                comp.RazonSocial = cabecera["t$fnam"] != null ? cabecera["t$fnam"].ToString().Trim() : String.Empty;
+                comp.ImporteTotalRetenido = cabecera["t$amnt$r"] != null ? Convert.ToDouble(cabecera["t$amnt$r"]) : (Double)0;
+                comp.MonedaTotalPagado = cabecera["t$cmon$r"] != null ? cabecera["t$cmon$r"].ToString().Trim() : String.Empty;
+                comp.ImporteTotalPagado = cabecera["t$amnt$p"] != null ? Convert.ToDouble(cabecera["t$amnt$p"]) : (Double)0;
+                comp.Moneda = cabecera["t$cmon$p"] != null ? cabecera["t$cmon$p"].ToString().Trim() : String.Empty;
+                comp.MontoLetras1 = cabecera["t$ley1"] != null ? cabecera["t$ley1"].ToString().Trim() : String.Empty;
+                comp.MontoLetras2 = cabecera["t$ley2"] != null ? cabecera["t$ley2"].ToString().Trim() : String.Empty;
+                comp.MontoLetras3 = cabecera["t$ley3"] != null ? cabecera["t$ley3"].ToString().Trim() : String.Empty;
+                comp.Direccion_Proveedor = cabecera["t$namc"] != null ? cabecera["t$namc"].ToString().Trim() : String.Empty;
+                comp.Urbanizacion_Proveedor = cabecera["t$namd"] != null ? cabecera["t$namd"].ToString().Trim() : String.Empty;
+                comp.CDR = cabecera["t$cdr"] != null ? cabecera["t$cdr"].ToString().Trim() : String.Empty;
+                comp.MsgCDR = cabecera["t$msgcdr"] != null ? cabecera["t$msgcdr"].ToString().Trim() : String.Empty;
+
+                comp.ListaDetalleRetenciones = ObtenerDetalleRetencion(dtDetalle, comp.TipoDocumento, comp.Serie, comp.Correlativo);
+                //CAMBIAR LA DENOMINACION A PARTIR DEL 15.12.2015
+                string strFormatoFecha = comp.FechaEmision.ToString("yyyyMMdd");
+                string strFormatoFechaCambio = "20151215";
+                int intValor = int.Parse(strFormatoFecha);
+                int intValorCambio = int.Parse(strFormatoFechaCambio);
+                if (comp.Moneda.Equals("PEN"))
+                {
+                    if (intValor >= intValorCambio)
+                    {
+                        //comp.MontoLetras1 = comp.MontoLetras1.Replace("NUEVOS_SOLES", "SOLES");
+                        comp.SiglaMonedaPeru = "S/";
+                    }
+                    else
+                    {
+                        comp.SiglaMonedaPeru = "S/.";
+                    }
+                }
+                listaRetenciones.Add(comp);
+            }
+
+            return listaRetenciones;
+        }
+
+        private List<EComprobanteRetencionDetalle> ObtenerDetalleRetencion(DataTable dtDetalle, object strtipofactura, object strserie, object strcorrelativo)
+        {
+            String tipofactura = strtipofactura != null ? strtipofactura.ToString().Trim() : String.Empty;
+            String serie = strserie != null ? strserie.ToString().Trim() : String.Empty;
+            Decimal correlativo = strcorrelativo != null ? Convert.ToDecimal(strcorrelativo) : (Decimal)0;
+
+            List<EComprobanteRetencionDetalle> _listadetalle = new List<EComprobanteRetencionDetalle>();
+
+            var dt = dtDetalle.AsEnumerable().Where(r => (r.Field<String>("t$prec") != null ? r.Field<String>("t$prec").Trim() == serie : false) &&
+                                                   (r.Field<Decimal>("t$prep") != null ? r.Field<Decimal>("t$prep") == correlativo : false));
+
+            if (dt.Count() > 0)
+            {
+                DataTable dtDet = dt.CopyToDataTable();
+
+                foreach (DataRow row in dtDet.Rows)
+                {
+                    EComprobanteRetencionDetalle ed = new EComprobanteRetencionDetalle();
+
+                    ed.Serie = row["t$prec"] != null ? row["t$prec"].ToString() : String.Empty;
+                    ed.Correlativo = row["t$prep"] != null ? Convert.ToInt64(row["t$prep"]) : (Int64)0;
+                    ed.TipoDocumento = row["t$tdoc$r"] != null ? row["t$tdoc$r"].ToString().Trim() : String.Empty;
+                    ed.NumeroComprobantePago = row["t$isup"] != null ? row["t$isup"].ToString().Trim() : String.Empty;
+                    ed.FechaEmisionDocumento = row["t$docd$r"] != null ? Convert.ToDateTime(row["t$docd$r"]) : DateTime.Now;
+                    ed.ImporteTotalDocumento = row["t$amnt$d"] != null ? Convert.ToDouble(row["t$amnt$d"]) : (Double)0;
+                    ed.MonedaDocumento = row["t$cmon$d"] != null ? row["t$cmon$d"].ToString().Trim() : String.Empty;
+                    ed.FechaPagoDocumento = row["t$docd$p"] != null ? Convert.ToDateTime(row["t$docd$p"]) : DateTime.Now;
+                    ed.TipoDocumentoPago = row["t$docu$p"] != null ? row["t$docu$p"].ToString().Trim() : String.Empty;
+                    ed.ImportePagoSinRetencion = row["t$amnt$p"] != null ? Convert.ToDouble(row["t$amnt$p"]) : (Double)0;
+                    ed.MonedaPago = row["t$cmon$p"] != null ? row["t$cmon$p"].ToString().Trim() : String.Empty;
+                    ed.ImporteRetenido = row["t$amnt$r"] != null ? Convert.ToDouble(row["t$amnt$r"]) : (Double)0;
+                    ed.ImporteTotalPagar = row["t$amnt$tp"] != null ? Convert.ToDouble(row["t$amnt$tp"]) : (Double)0;
+                    ed.MonedaTotalPagado = row["t$cmon$mo"] != null ? row["t$cmon$mo"].ToString().Trim() : String.Empty;
+                    ed.MonedaImporteRetenido = row["t$cmon$r"] != null ? row["t$cmon$r"].ToString() : String.Empty;
+                    ed.FechaRetencion = row["t$date$r"] != null ? Convert.ToDateTime(row["t$date$r"]) : DateTime.Now;
+                    ed.FactorTipoCambio = row["t$ticam"] != null ? Convert.ToDouble(row["t$ticam"]) : (Double)0;
+
+                    _listadetalle.Add(ed);
+                }
+            }
+            return _listadetalle;
+        }
+
+        public List<ECabeceraReversion> ObtenerReversiones(DateTime fecha)
+        {
+            String strCompania = ConfigurationManager.AppSettings["CompaniaRetencion"];
+
+            string _query = "SELECT * FROM ttfacp822" + strCompania +
+                " WHERE t$feco = to_date('" + fecha.ToString("MM/dd/yyyy") + "','mm/dd/yyyy')" +
+                " order by t$prep, t$item";
+
+            DataTable dtComunicacion = FabricaSingleton<DComprobante>.Crear().ObtenerTabla(_query);
+
+            List<ECabeceraReversion> lista = new List<ECabeceraReversion>();
+
+            foreach (DataRow comu in dtComunicacion.Rows)
+            {
+                ECabeceraReversion comp = new ECabeceraReversion();
+                comp.FechaComunicacion = comu["t$feco"] != null ? Convert.ToDateTime(comu["t$feco"]) : DateTime.Now;
+                comp.Serie = comu["t$prec"] != null ? comu["t$prec"].ToString() : String.Empty;
+                comp.Correlativo = comu["t$prep"] != null ? comu["t$prep"].ToString() : String.Empty;
+                comp.TipoDocumento = comu["t$tido"] != null ? comu["t$tido"].ToString() : String.Empty;
+                comp.NumeroItem = comu["t$item"] != null ? comu["t$item"].ToString() : String.Empty;
+                comp.MotivoReversion = comu["t$moti"] != null ? comu["t$moti"].ToString() : String.Empty;
+                comp.IdentificadorComunicacion = comu["t$inco"] != null ? comu["t$inco"].ToString() : String.Empty;
+                comp.FechaEmision = comu["t$dcdt"] != null ? Convert.ToDateTime(comu["t$dcdt"]) : DateTime.Now;
+                comp.RazonSocial = comu["t$nama"] != null ? Convert.ToString(comu["t$nama"]) : String.Empty;
+                comp.RUC = comu["t$rucn"] != null ? Convert.ToString(comu["t$rucn"]) : String.Empty;
+                comp.CDR = comu["t$cdr"] != null ? comu["t$cdr"].ToString() : String.Empty;
+                comp.MensajeSunat = comu["t$msgcdr"] != null ? comu["t$msgcdr"].ToString() : String.Empty;
+
+                lista.Add(comp);
+            }
+
+            return lista;
+        }
+
+        private EResultado ProcesarRetencion(EComprobanteRetencion comp,string enviarOSE)
+        {
+            EResultado result = null;
+            BusinessServiceSoapClient client = new BusinessServiceSoapClient();
+            client.InnerChannel.OperationTimeout = new TimeSpan(5, 30, 1);
+
+            try
+            {
+                ERetencion retencion = new ERetencion();
+
+                retencion.Serie = comp.Serie;
+                retencion.Correlativo = comp.Correlativo;
+                retencion.FechaEmision = comp.FechaEmision;
+                //retencion.NumeroComprobante = comp.Serie + "-" + comp.Correlativo;
+                
+                //factura.FechaImpresion = comp.Fecha.ToString("dd/MM/yyyy");
+                //factura.HoraEmision = comp.Fecha.ToString("HH:mm:ss");
+                retencion.TipoDocumento = comp.TipoDocumento; //01:Factura
+                retencion.Moneda = comp.Moneda;
+
+                ////Datos del Adquirente
+                retencion.RUC = comp.RUC;
+                //factura.TipoDocumentoAdquirente = comp.TipoDocumento;//6:Registro Unico Contribuyentes
+                retencion.RazonSocial = comp.RazonSocial;
+
+                retencion.RegimenRetencion = comp.RegimenRetencion;
+                retencion.MonedaTotalPagado = comp.MonedaTotalPagado;
+                retencion.ImporteTotalPagado = comp.ImporteTotalPagado;
+                retencion.ImporteTotalRetenido = comp.ImporteTotalRetenido;
+                retencion.Observaciones = comp.Observaciones;
+                retencion.MontoLetras1 = comp.MontoLetras1;
+                retencion.MontoLetras2 = comp.MontoLetras2;
+                retencion.MontoLetras3 = comp.MontoLetras3;
+
+                retencion.Direccion_Proveedor = comp.Direccion_Proveedor;
+                retencion.Urbanizacion_Proveedor = comp.Urbanizacion_Proveedor;
+                retencion.Distrito_Proveedor = comp.Distrito_Proveedor;
+                retencion.Provincia_Proveedor = comp.Provincia_Proveedor;
+                retencion.Departamento_Proveedor = comp.Departamento_Proveedor;
+                retencion.Pais_Proveedor = comp.Pais_Proveedor;
+
+                retencion.SiglaMonedaPeru = comp.SiglaMonedaPeru;
+
+                ERetencionDetalle[] det = new ERetencionDetalle[comp.ListaDetalleRetenciones.Count];
+                Int32 contador = 0;
+                Int32 intFila = 0;
+                //Decimal dSumaValorventa = 0;
+                foreach (EComprobanteRetencionDetalle item in comp.ListaDetalleRetenciones)
+                {
+                    intFila++;
+                    ERetencionDetalle detalle = new ERetencionDetalle();
+                //    //detfact.NumeroItem = item.Linea.ToString();
+                    detalle.NumeroItem = intFila.ToString();
+                    detalle.Serie = item.Serie;
+                    detalle.Correlativo = item.Correlativo;
+                    detalle.TipoDocumento = item.TipoDocumento;
+
+                    detalle.TipoDocumentoPago = item.TipoDocumentoPago;
+                    detalle.NumeroComprobantePago = item.NumeroComprobantePago;
+                    detalle.FechaEmisionDocumento = item.FechaEmisionDocumento;
+                    detalle.MonedaDocumento = item.MonedaDocumento;
+                    detalle.MonedaImporteRetenido = item.MonedaImporteRetenido;
+                    detalle.MonedaPago = item.MonedaPago;
+                    detalle.ImportePagoSinRetencion = item.ImportePagoSinRetencion;
+                    detalle.ImporteRetenido = item.ImporteRetenido;
+                    detalle.MonedaTotalPagado = item.MonedaTotalPagado;
+                    detalle.ImporteTotalDocumento = item.ImporteTotalDocumento;
+                    detalle.ImporteTotalPagar = item.ImporteTotalPagar;
+                    detalle.FechaPagoDocumento = item.FechaPagoDocumento;
+                    detalle.FechaRetencion = item.FechaRetencion;
+                    detalle.FactorTipoCambio = item.FactorTipoCambio;
+
+                    det[contador] = detalle;
+                    contador = contador + 1;
+                }
+
+                ////GRATUITAS
+                //factura.TotalVentaOpGratuitas = (factura.ImporteTotalComprobante == 0) ? dSumaValorventa : (Decimal)0.00;
+
+                retencion.DetalleRetencion = det;
+
+                if (enviarOSE == "NO")
+                {
+                    //SUNAT
+                    result = client.EnviarRetencion(retencion);
+                }
+                else
+                {
+                    //OSE
+                    result = client.EnviarRetencionOSE(retencion);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                client.Close();
+            }
+
+            return result;
+        }
+
+
+        public List<ECabeceraReversion> ProcesarReversiones(List<ECabeceraReversion> listaReversiones)
+        {
+            String grabaroracle = ConfigurationManager.AppSettings["GrabarOracle"];
+            String strCompania = ConfigurationManager.AppSettings["CompaniaRetencion"];
+            String enviarOSE = ConfigurationManager.AppSettings["EnviarOSE"];
+
+            BusinessServiceSoapClient client = new BusinessServiceSoapClient();
+            try
+            {
+                
+                EReversion lereversion = new EReversion();
+
+                lereversion.FechaComunicacion = listaReversiones[0].FechaComunicacion;
+                lereversion.FechaEmision = listaReversiones[0].FechaEmision;
+                
+                EReversionDetalle[] det = new EReversionDetalle[listaReversiones.Count];
+
+                int intFila = 0;
+                foreach (ECabeceraReversion comp in listaReversiones)
+                {
+                    EReversionDetalle item = new EReversionDetalle();
+                    item.NumeroItem = comp.NumeroItem;
+                    item.TipoDocumento = comp.TipoDocumento;
+                    item.Serie = comp.Serie;
+                    item.Correlativo = comp.Correlativo;
+                    item.FechaEmision = comp.FechaEmision;
+                    item.MotivoReversion = comp.MotivoReversion.Trim();
+
+                    det[intFila] = item;
+                    intFila++;
+                }
+
+                EResultado result = null;
+                lereversion.DetalleReversion = det;
+
+                if (enviarOSE == "NO")
+                    result = client.EnviarReversion(lereversion);
+                else
+                    result = client.EnviarReversionOSE(lereversion);
+
+                if (grabaroracle == "SI")
+                {
+                    foreach (ECabeceraReversion comp in listaReversiones)
+                    {
+                        comp.Versionestruct = result.EstadoComprobante;
+                        comp.CDR = result.CDR; //Mensaje Largo
+                        comp.MsgCDR = result.MensajeResultadoSunat;
+
+                        if (comp.Versionestruct != null && comp.CDR != null && comp.MsgCDR != null)
+                        {
+                            String _query = "UPDATE ttfacp822" + strCompania +
+                                " SET t$cdr = '" + (comp.CDR.Length > 4 ? comp.CDR.Substring(0, 4) : comp.CDR) + "'" +
+                                (comp.MsgCDR.Length > 0 ? ", t$msgcdr = '" + comp.MsgCDR + "'" : "") +
+                                " WHERE t$prec = :p_prec AND t$prep = :p_prep";
+
+                            //ACTUALIZAR EN LA BASE DE DATOS
+                            new DComprobante().ActualizarTablaRetencion(_query, comp.Serie, long.Parse(comp.Correlativo));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                client.Close();
+            }
+
+            return listaReversiones;
+        }
+
+    }
+}

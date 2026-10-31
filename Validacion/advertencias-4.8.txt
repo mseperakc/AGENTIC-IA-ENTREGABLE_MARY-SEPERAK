@@ -1,0 +1,80 @@
+﻿APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobante.cs(100,25): warning CS0219: La variable 'exito' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobante.cs(1563,25): warning CS0219: La variable 'exito' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobante.cs(335,25): warning CS0219: La variable 'exito' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobante.cs(4331,25): warning CS0219: La variable 'exito' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobanteOSE.cs(101,25): warning CS0219: La variable 'exito' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobanteOSE.cs(1635,25): warning CS0219: La variable 'exito' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobanteOSE.cs(346,25): warning CS0219: La variable 'exito' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobanteOSE.cs(4466,25): warning CS0219: La variable 'exito' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.BL\BComprobanteOSE.cs(754,21): warning CS0219: La variable 'valorIVA' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\BoletaPDF.cs(41,18): warning CS0219: La variable 'bDetraccion' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\BoletaPDF_.cs(124,21): warning CS0219: La variable 'row' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\FacturaPDF.cs(40,18): warning CS0219: La variable 'bDetraccion' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\FacturaPDF_.cs(124,21): warning CS0219: La variable 'row' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\FirmaDigital.cs(559,20): warning CS0219: La variable 'l_xpath' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\itextUtil.cs(228,44): warning CS0618: 'FormattedText.FormattedText(string, CultureInfo, FlowDirection, Typeface, double, Brush)' está obsoleto: 'Use the PixelsPerDip override'
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\NotaCreditoPDF_.cs(124,21): warning CS0219: La variable 'row' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\NotaDebitoPDF_.cs(123,21): warning CS0219: La variable 'row' está asignada pero su valor nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\Util.cs(112,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\Util.cs(134,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa
+APISEE\eFACT-COMPONENTE\EDITORAPERU.FACTELECT\FACTELECT.SERVICE.UTIL\Util.cs(91,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(1000,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(1002,55): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(1003,47): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(1005,47): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(1006,57): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(2769,53): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'decimal' nunca es igual a 'NULL' de tipo 'decimal?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(716,49): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(717,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(718,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(719,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(721,55): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(722,47): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(724,47): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(725,57): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(821,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(822,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(823,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(824,55): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(826,47): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(827,47): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(828,57): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(829,49): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(831,47): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(966,61): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(967,61): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(968,61): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(969,61): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(970,61): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(971,57): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(972,63): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(973,57): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(997,49): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(998,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BComprobante.cs(999,52): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'double' nunca es igual a 'NULL' de tipo 'double?'
+WFRSEE\FacturacionElectronica\Editora.BusinessLogic\BRetencion.cs(177,53): warning CS0472: El resultado de la expresión siempre es 'true' porque un valor del tipo 'decimal' nunca es igual a 'NULL' de tipo 'decimal?'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(115,47): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(117,13): warning CS0618: 'OracleConnection' está obsoleto: 'OracleConnection has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(133,43): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(135,13): warning CS0618: 'OracleConnection' está obsoleto: 'OracleConnection has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(14,9): warning CS0618: 'OracleConnection' está obsoleto: 'OracleConnection has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(23,24): warning CS0618: 'OracleConnection' está obsoleto: 'OracleConnection has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(26,16): warning CS0618: 'OracleConnection' está obsoleto: 'OracleConnection has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(40,16): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(42,13): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(42,37): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(47,16): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(49,13): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(49,37): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(55,36): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(60,36): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(65,37): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(70,37): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(75,41): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(80,33): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(82,13): warning CS0618: 'OracleConnection' está obsoleto: 'OracleConnection has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(97,36): warning CS0618: 'OracleCommand' está obsoleto: 'OracleCommand has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\Editora.DataAccess\ConexionOracle.cs(99,13): warning CS0618: 'OracleConnection' está obsoleto: 'OracleConnection has been deprecated. http://go.microsoft.com/fwlink/?LinkID=144260'
+WFRSEE\FacturacionElectronica\FacturacionElectronica\ProcesarComprobantes.aspx.cs(796,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa
+WFRSEE\FacturacionElectronica\FacturacionElectronica\ProcesarRetenciones.aspx.cs(470,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa
+WFRSEE\FacturacionElectronica\FacturacionElectronica\ValidarTicket.aspx.cs(60,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa
